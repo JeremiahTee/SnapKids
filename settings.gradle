@@ -1,0 +1,2 @@
+rootProject.name='Snap Kids'
+include ':app'
