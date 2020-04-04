@@ -32,15 +32,8 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.9.0"
+    implementation "com.google.ar.sceneform.ux:sceneform-ux:1.15.0"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
-
-apply plugin: 'com.google.ar.sceneform.plugin'
-
-sceneform.asset('sampledata/models/fox_face.fbx',
-        'sampledata/models/fox_face_material.mat',
-        'sampledata/models/fox_face.sfa',
-        'src/main/res/raw/fox_face')
