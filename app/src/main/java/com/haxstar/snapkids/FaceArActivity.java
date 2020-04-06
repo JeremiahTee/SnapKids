@@ -21,6 +21,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedFace;
@@ -31,7 +33,10 @@ import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.rendering.Texture;
+import com.google.ar.sceneform.utilities.ChangeId;
 import com.google.ar.sceneform.ux.AugmentedFaceNode;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -47,6 +52,10 @@ public class FaceArActivity extends AppCompatActivity {
 
     private ModelRenderable faceRegionsRenderable;
     private Texture faceMeshTexture;
+    private ArrayList<ModelRenderable> filtersList = new ArrayList<>();
+    private boolean changeModel = false;
+    private int filterIndex = 1;
+    private ChangeId foxId;
 
     private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
 
@@ -64,23 +73,20 @@ public class FaceArActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         arFragment = (ArFaceFragment) getSupportFragmentManager().findFragmentById(R.id.face_fragment);
 
-        // Load the face regions renderable.
-        // This is a skinned model that renders 3D objects mapped to the regions of the augmented face.
-        ModelRenderable.builder()
-                .setSource(this, R.raw.fox_face)
-                .build()
-                .thenAccept(
-                        modelRenderable -> {
-                            faceRegionsRenderable = modelRenderable;
-                            modelRenderable.setShadowCaster(false);
-                            modelRenderable.setShadowReceiver(false);
-                        });
+        ImageButton nextButton = findViewById(R.id.button_next);
 
-        // Load the face mesh texture.
-        Texture.builder()
-                .setSource(this, R.drawable.fox_face_mesh_texture)
-                .build()
-                .thenAccept(texture -> faceMeshTexture = texture);
+        //Set the next button
+        nextButton.setOnClickListener( (View v) -> {
+                    changeModel = !changeModel;
+                    filterIndex++;
+                    if (filterIndex > filtersList.size() - 1) {
+                        filterIndex = 0;
+                    }
+                    faceRegionsRenderable = filtersList.get(filterIndex);
+                }
+        );
+
+        loadModels();
 
         ArSceneView sceneView = arFragment.getArSceneView();
 
@@ -92,7 +98,7 @@ public class FaceArActivity extends AppCompatActivity {
 
         scene.addOnUpdateListener(
                 (FrameTime frameTime) -> {
-                    if (faceRegionsRenderable == null || faceMeshTexture == null) {
+                    if (faceRegionsRenderable == null) {
                         return;
                     }
 
@@ -105,10 +111,15 @@ public class FaceArActivity extends AppCompatActivity {
                             AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
                             faceNode.setParent(scene);
                             faceNode.setFaceRegionsRenderable(faceRegionsRenderable);
-                            faceNode.setFaceMeshTexture(faceMeshTexture);
+                            //If the fox filter is being loaded, load the texture as well
+                            setFoxTexture(faceNode);
                             faceNodeMap.put(face, faceNode);
+                        }else if(changeModel){
+                            faceNodeMap.get(face).setFaceRegionsRenderable(faceRegionsRenderable);
+                            setFoxTexture( faceNodeMap.get(face));
                         }
                     }
+                    changeModel = false;
 
                     // Remove any AugmentedFaceNodes associated with an AugmentedFace that stopped tracking.
                     Iterator<Map.Entry<AugmentedFace, AugmentedFaceNode>> iter =
@@ -123,6 +134,52 @@ public class FaceArActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    /**
+     * Loads each face regions renderables and textures
+     * Face region renderables are skinned models that render 3D objects mapped to the regions of the augmented face.
+     */
+    public void loadModels(){
+        ArrayList<String> resources = new ArrayList<>(Arrays.asList(
+                "fox_face", "glasses", "yellow_glasses"));
+
+        //Load each models
+        for(String res: resources){
+            ModelRenderable.builder()
+                    .setSource(this, getResources().getIdentifier(res, "raw", "com.haxstar.snapkids"))
+                    .build()
+                    .thenAccept(
+                            modelRenderable -> {
+                                //Add filter to list of filters
+                                filtersList.add(modelRenderable);
+                                faceRegionsRenderable = modelRenderable;
+                                modelRenderable.setShadowCaster(false);
+                                modelRenderable.setShadowReceiver(false);
+
+                                if(res == "fox_face"){
+                                    foxId = modelRenderable.getId();
+                                }
+                            });
+        }
+
+        // Load the fox face mesh texture.
+        Texture.builder()
+                .setSource(this, R.drawable.fox_face_mesh_texture)
+                .build()
+                .thenAccept(texture -> faceMeshTexture = texture);
+    }
+
+    /**
+     * Sets the fox texture if the fox model is being rendered
+     */
+    public void setFoxTexture(AugmentedFaceNode node){
+        //If the fox filter is being loaded, load the texture as well
+        if(faceRegionsRenderable.getId() == foxId){
+            node.setFaceMeshTexture(faceMeshTexture);
+        }else{
+            node.setFaceMeshTexture(null);
+        }
     }
 
     /**
