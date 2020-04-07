@@ -142,7 +142,7 @@ public class FaceArActivity extends AppCompatActivity {
      */
     public void loadModels(){
         ArrayList<String> resources = new ArrayList<>(Arrays.asList(
-                "fox_face", "glasses", "yellow_glasses"));
+                "fox_face", "yellow_glasses", "cat"));
 
         //Load each models
         for(String res: resources){
