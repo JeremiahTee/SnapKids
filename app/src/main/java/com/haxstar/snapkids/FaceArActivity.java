@@ -19,6 +19,8 @@ package com.haxstar.snapkids;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -73,7 +75,34 @@ public class FaceArActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         arFragment = (ArFaceFragment) getSupportFragmentManager().findFragmentById(R.id.face_fragment);
 
-        ImageButton nextButton = findViewById(R.id.button_next);
+        ImageButton galleryButton = findViewById(R.id.gallery_btn);
+        ImageButton cameraButton = findViewById(R.id.camera_btn);
+        ImageButton nextButton = findViewById(R.id.face_filter_btn);
+
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!galleryButton.isActivated()) {
+                    Intent intent = new Intent();
+                    intent.setAction(android.content.Intent.ACTION_VIEW);
+                    intent.setType("image/*");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.camera_snap);
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!cameraButton.isActivated()) {
+                    Toast.makeText(FaceArActivity.this, "Take Photo", Toast.LENGTH_SHORT).show();
+                    mp.start();
+                   
+                }
+            }
+        });
 
         //Set the next button
         nextButton.setOnClickListener( (View v) -> {
