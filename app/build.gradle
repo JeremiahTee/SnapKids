@@ -37,6 +37,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.android.material:material:1.1.0'
 }
 
 apply plugin: 'com.google.ar.sceneform.plugin'
@@ -45,3 +46,13 @@ sceneform.asset('sampledata/models/fox_face.fbx',
         'sampledata/models/fox_face_material.mat',
         'sampledata/models/fox_face.sfa',
         'src/main/res/raw/fox_face')
+
+sceneform.asset('sampledata/models/yellow_glasses.fbx',
+        'default',
+        'sampledata/models/yellow_glasses.sfa',
+        'src/main/res/raw/yellow_glasses')
+
+sceneform.asset('sampledata/models/cat.fbx',
+        'default',
+        'sampledata/models/cat.sfa',
+        'src/main/res/raw/cat')

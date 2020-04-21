@@ -1,13 +1,59 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".FaceArActivity">
 
-    <fragment android:name="com.haxstar.snapkids.ArFaceFragment"
+    <fragment
         android:id="@+id/face_fragment"
+        android:name="com.haxstar.snapkids.ArFaceFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+<!--
+    <ImageButton
+        android:id="@+id/button_next"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="24dp"
+        android:src="@drawable/ic_autorenew_black_24dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@null"/>
+-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:layout_marginBottom="60dp">
+
+        <ImageButton
+            android:id="@+id/gallery_btn"
+            android:layout_height="wrap_content"
+            android:layout_width="72dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:background="@null"
+            app:srcCompat="@drawable/gallery_pic" />
+
+        <ImageButton
+            android:id="@+id/camera_btn"
+            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:background="@null"
+            app:srcCompat="@drawable/camera_pic" />
+
+        <ImageButton
+            android:id="@+id/face_filter_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:background="@null"
+            android:src="@drawable/selector_toggle_button" />
+    </LinearLayout>
+</FrameLayout>
