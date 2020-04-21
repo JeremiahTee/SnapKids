@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Snap Kids</string>
+    <string name="app_name">SnapKids</string>
+    <string name="loading">Loading...</string>
 </resources>
