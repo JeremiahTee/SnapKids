@@ -39,6 +39,15 @@
             app:srcCompat="@drawable/camera_pic" />
 
         <ImageButton
+            android:id="@+id/ar_btn"
+            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_autorenew_black_24dp" />
+
+        <ImageButton
             android:id="@+id/face_filter_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
