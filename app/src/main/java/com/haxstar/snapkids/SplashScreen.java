@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -26,8 +27,7 @@ public class SplashScreen extends AppCompatActivity {
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) &&
                 (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED))
-        {
+                        != PackageManager.PERMISSION_GRANTED)) {
 
             ActivityCompat.requestPermissions(this, new String[]{
                             Manifest.permission.CAMERA,
@@ -39,11 +39,11 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult (int requestCode,
-                                            String[] permissions,
-                                            int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == MY_PERMISSIONS_MULTIPLE_REQUEST) {
+        if (requestCode == MY_PERMISSIONS_MULTIPLE_REQUEST) {
             if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 navigateToCamera();
             }
@@ -52,13 +52,10 @@ public class SplashScreen extends AppCompatActivity {
 
     private void navigateToCamera() {
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(SplashScreen.this,  FaceArActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashScreen.this, FaceArActivity.class);
+            startActivity(intent);
+            finish();
         }, 2000);
     }
 }

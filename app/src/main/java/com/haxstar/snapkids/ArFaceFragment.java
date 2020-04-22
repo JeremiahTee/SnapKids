@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import com.google.ar.core.Config;
 import com.google.ar.core.Config.AugmentedFaceMode;
 import com.google.ar.core.Session;
 import com.google.ar.sceneform.ux.ArFragment;
+
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -30,7 +32,6 @@ public class ArFaceFragment extends ArFragment {
             LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FrameLayout frameLayout =
                 (FrameLayout) super.onCreateView(inflater, container, savedInstanceState);
-
 
         //Turn off planeDiscoveryController as plane trackables are not supported with the front camera.
         getPlaneDiscoveryController().hide();
