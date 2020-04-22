@@ -10,17 +10,6 @@
         android:name="com.haxstar.snapkids.ArFaceFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-<!--
-    <ImageButton
-        android:id="@+id/button_next"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="24dp"
-        android:src="@drawable/ic_autorenew_black_24dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:background="@null"/>
--->
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,6 +35,15 @@
             android:clickable="true"
             android:background="@null"
             app:srcCompat="@drawable/camera_pic" />
+
+        <ImageButton
+            android:id="@+id/ar_btn"
+            android:layout_height="wrap_content"
+            android:layout_width="75dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_autorenew_black_24dp" />
 
         <ImageButton
             android:id="@+id/face_filter_btn"

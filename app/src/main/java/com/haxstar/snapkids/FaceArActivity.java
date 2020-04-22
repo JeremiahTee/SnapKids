@@ -92,6 +92,7 @@ public class FaceArActivity extends AppCompatActivity {
         arFragment = (ArFaceFragment) getSupportFragmentManager().findFragmentById(R.id.face_fragment);
 
         ImageButton galleryButton = findViewById(R.id.gallery_btn);
+        ImageButton arButton = findViewById(R.id.ar_btn);
         ImageButton cameraButton = findViewById(R.id.camera_btn);
         ImageButton nextButton = findViewById(R.id.face_filter_btn);
 
@@ -105,6 +106,16 @@ public class FaceArActivity extends AppCompatActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
+            }
+        });
+
+        arButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+                sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.1?file=https://poly.googleusercontent.com/downloads/c/fp/1587461923777301/2LCcq8vhqJ3/6S-eh-b-ESF/turtle.gltf"));
+                sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
+                startActivity(sceneViewerIntent);
             }
         });
 
