@@ -67,9 +67,8 @@ public class FaceArActivity extends AppCompatActivity {
     private ArFaceFragment arFragment;
     private ModelRenderable faceRegionsRenderable;
     private Texture faceMeshTexture;
-    private ArrayList<ModelRenderable> filtersList = new ArrayList<>();
+    private final ArrayList<ModelRenderable> filtersList = new ArrayList<>();
     private boolean changeModel = false;
-    private int filterIndex = 1;
     private ChangeId foxId;
 
     private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
@@ -107,14 +106,11 @@ public class FaceArActivity extends AppCompatActivity {
             }
         });
 
-        arButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-                sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.1?file=https://poly.googleusercontent.com/downloads/c/fp/1587461923777301/2LCcq8vhqJ3/6S-eh-b-ESF/turtle.gltf"));
-                sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
-                startActivity(sceneViewerIntent);
-            }
+        arButton.setOnClickListener(v -> {
+            Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+            sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.1?file=https://poly.googleusercontent.com/downloads/c/fp/1587461923777301/2LCcq8vhqJ3/6S-eh-b-ESF/turtle.gltf"));
+            sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
+            startActivity(sceneViewerIntent);
         });
 
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.camera_snap);
@@ -224,7 +220,7 @@ public class FaceArActivity extends AppCompatActivity {
      * Loads each face regions renderables and textures
      * Face region renderables are skinned models that render 3D objects mapped to the regions of the augmented face.
      */
-    public void loadModels() {
+    private void loadModels() {
         ArrayList<String> resources = new ArrayList<>(Arrays.asList(
                 "fox_face", "yellow_glasses", "cat"));
 
@@ -257,7 +253,7 @@ public class FaceArActivity extends AppCompatActivity {
     /**
      * Sets the fox texture if the fox model is being rendered
      */
-    public void setFoxTexture(AugmentedFaceNode node) {
+    private void setFoxTexture(AugmentedFaceNode node) {
         //If the fox filter is being loaded, load the texture as well
         if (faceRegionsRenderable.getId() == foxId) {
             node.setFaceMeshTexture(faceMeshTexture);
@@ -274,7 +270,7 @@ public class FaceArActivity extends AppCompatActivity {
      *
      * <p>Finishes the activity if Sceneform can not run
      */
-    public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
+    private static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
         if (ArCoreApk.getInstance().checkAvailability(activity)
                 == ArCoreApk.Availability.UNSUPPORTED_DEVICE_NOT_CAPABLE) {
             Log.e(TAG, "Augmented Faces requires ArCore.");
