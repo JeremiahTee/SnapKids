@@ -33,7 +33,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.AugmentedFace;
 import com.google.ar.core.TrackingState;
@@ -58,16 +57,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 public class FaceArActivity extends AppCompatActivity {
     private static final String TAG = FaceArActivity.class.getSimpleName();
-
     private static final double MIN_OPENGL_VERSION = 3.0;
-
     private ArFaceFragment arFragment;
-
     private ModelRenderable faceRegionsRenderable;
     private Texture faceMeshTexture;
     private ArrayList<ModelRenderable> filtersList = new ArrayList<>();
@@ -93,41 +90,72 @@ public class FaceArActivity extends AppCompatActivity {
 
         ImageButton galleryButton = findViewById(R.id.gallery_btn);
         ImageButton cameraButton = findViewById(R.id.camera_btn);
-        ImageButton nextButton = findViewById(R.id.face_filter_btn);
+        ImageButton options = findViewById(R.id.face_filter_btn);
 
-        galleryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!galleryButton.isActivated()) {
-                    Intent intent = new Intent();
-                    intent.setAction(android.content.Intent.ACTION_VIEW);
-                    intent.setType("image/*");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
+        ImageButton glasses = findViewById(R.id.glasses_filter_btn);
+        ImageButton fox = findViewById(R.id.fox_filter_btn);
+        ImageButton cat = findViewById(R.id.cat_filter_btn);
+
+        galleryButton.setOnClickListener(v -> {
+            if (!galleryButton.isActivated()) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setType("image/*");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
 
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.camera_snap);
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!cameraButton.isActivated()) {
-                    Toast.makeText(FaceArActivity.this, "Take Photo", Toast.LENGTH_SHORT).show();
-                    mp.start();
-                    takePhoto();
-                }
+        cameraButton.setOnClickListener(v -> {
+            if (!cameraButton.isActivated()) {
+                Toast.makeText(FaceArActivity.this, "Take Photo", Toast.LENGTH_SHORT).show();
+                mp.start();
+                takePhoto();
             }
         });
 
         //Set the next button
-        nextButton.setOnClickListener( (View v) -> {
-                    changeModel = !changeModel;
-                    filterIndex++;
-                    if (filterIndex > filtersList.size() - 1) {
-                        filterIndex = 0;
+        options.setOnClickListener((View v) -> {
+                    if (glasses.getVisibility() == View.VISIBLE) {
+                        glasses.setVisibility(View.GONE);
+                        fox.setVisibility(View.GONE);
+                        cat.setVisibility(View.GONE);
+                    } else {
+                        glasses.setVisibility(View.VISIBLE);
+                        fox.setVisibility(View.VISIBLE);
+                        cat.setVisibility(View.VISIBLE);
                     }
-                    faceRegionsRenderable = filtersList.get(filterIndex);
+                }
+        );
+
+        //Apply glasses filter
+        glasses.setOnClickListener((View v) -> {
+                    glasses.setVisibility(View.GONE);
+                    fox.setVisibility(View.GONE);
+                    cat.setVisibility(View.GONE);
+                    changeModel = !changeModel;
+                    faceRegionsRenderable = filtersList.get(1);
+                }
+        );
+
+        //Apply fox filter
+        fox.setOnClickListener((View v) -> {
+                    glasses.setVisibility(View.GONE);
+                    fox.setVisibility(View.GONE);
+                    cat.setVisibility(View.GONE);
+                    changeModel = !changeModel;
+                    faceRegionsRenderable = filtersList.get(2);
+                }
+        );
+
+        //Apply cat filter
+        cat.setOnClickListener((View v) -> {
+                    glasses.setVisibility(View.GONE);
+                    fox.setVisibility(View.GONE);
+                    cat.setVisibility(View.GONE);
+                    changeModel = !changeModel;
+                    faceRegionsRenderable = filtersList.get(0);
                 }
         );
 
@@ -148,7 +176,7 @@ public class FaceArActivity extends AppCompatActivity {
                     }
 
                     Collection<AugmentedFace> faceList =
-                            sceneView.getSession().getAllTrackables(AugmentedFace.class);
+                            Objects.requireNonNull(sceneView.getSession()).getAllTrackables(AugmentedFace.class);
 
                     // Make new AugmentedFaceNodes for any new faces.
                     for (AugmentedFace face : faceList) {
@@ -159,9 +187,9 @@ public class FaceArActivity extends AppCompatActivity {
                             //If the fox filter is being loaded, load the texture as well
                             setFoxTexture(faceNode);
                             faceNodeMap.put(face, faceNode);
-                        }else if(changeModel){
-                            faceNodeMap.get(face).setFaceRegionsRenderable(faceRegionsRenderable);
-                            setFoxTexture( faceNodeMap.get(face));
+                        } else if (changeModel) {
+                            Objects.requireNonNull(faceNodeMap.get(face)).setFaceRegionsRenderable(faceRegionsRenderable);
+                            setFoxTexture(faceNodeMap.get(face));
                         }
                     }
                     changeModel = false;
@@ -185,12 +213,12 @@ public class FaceArActivity extends AppCompatActivity {
      * Loads each face regions renderables and textures
      * Face region renderables are skinned models that render 3D objects mapped to the regions of the augmented face.
      */
-    public void loadModels(){
+    public void loadModels() {
         ArrayList<String> resources = new ArrayList<>(Arrays.asList(
                 "fox_face", "yellow_glasses", "cat"));
 
         //Load each models
-        for(String res: resources){
+        for (String res : resources) {
             ModelRenderable.builder()
                     .setSource(this, getResources().getIdentifier(res, "raw", "com.haxstar.snapkids"))
                     .build()
@@ -202,7 +230,7 @@ public class FaceArActivity extends AppCompatActivity {
                                 modelRenderable.setShadowCaster(false);
                                 modelRenderable.setShadowReceiver(false);
 
-                                if(res == "fox_face"){
+                                if (res.equals("fox_face")) {
                                     foxId = modelRenderable.getId();
                                 }
                             });
@@ -218,11 +246,11 @@ public class FaceArActivity extends AppCompatActivity {
     /**
      * Sets the fox texture if the fox model is being rendered
      */
-    public void setFoxTexture(AugmentedFaceNode node){
+    public void setFoxTexture(AugmentedFaceNode node) {
         //If the fox filter is being loaded, load the texture as well
-        if(faceRegionsRenderable.getId() == foxId){
+        if (faceRegionsRenderable.getId() == foxId) {
             node.setFaceMeshTexture(faceMeshTexture);
-        }else{
+        } else {
             node.setFaceMeshTexture(null);
         }
     }
@@ -244,7 +272,7 @@ public class FaceArActivity extends AppCompatActivity {
             return false;
         }
         String openGlVersionString =
-                ((ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE))
+                ((ActivityManager) Objects.requireNonNull(activity.getSystemService(Context.ACTIVITY_SERVICE)))
                         .getDeviceConfigurationInfo()
                         .getGlEsVersion();
         if (Double.parseDouble(openGlVersionString) < MIN_OPENGL_VERSION) {
@@ -267,7 +295,7 @@ public class FaceArActivity extends AppCompatActivity {
     private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
 
         File out = new File(filename);
-        if (!out.getParentFile().exists()) {
+        if (!Objects.requireNonNull(out.getParentFile()).exists()) {
             out.getParentFile().mkdirs();
         }
         try (FileOutputStream outputStream = new FileOutputStream(filename);
@@ -307,7 +335,7 @@ public class FaceArActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG);
                     toast.show();
                     return;
-                } 
+                }
             } else {
                 Toast toast = Toast.makeText(FaceArActivity.this,
                         "Failed to copyPixels: " + copyResult, Toast.LENGTH_LONG);
