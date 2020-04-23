@@ -96,6 +96,7 @@ public class FaceArActivity extends AppCompatActivity {
         ImageButton fox = findViewById(R.id.fox_filter_btn);
         ImageButton cat = findViewById(R.id.cat_filter_btn);
         ImageButton close = findViewById(R.id.face_filter_close);
+        ImageButton noFilter = findViewById(R.id.no_filter_btn);
 
         galleryButton.setOnClickListener(v -> {
             if (!galleryButton.isActivated()) {
@@ -130,6 +131,7 @@ public class FaceArActivity extends AppCompatActivity {
                     glasses.setVisibility(View.VISIBLE);
                     fox.setVisibility(View.VISIBLE);
                     cat.setVisibility(View.VISIBLE);
+                    noFilter.setVisibility(View.VISIBLE);
                 }
         );
 
@@ -140,6 +142,7 @@ public class FaceArActivity extends AppCompatActivity {
                     glasses.setVisibility(View.GONE);
                     fox.setVisibility(View.GONE);
                     cat.setVisibility(View.GONE);
+                    noFilter.setVisibility(View.GONE);
                 }
         );
 
@@ -151,6 +154,7 @@ public class FaceArActivity extends AppCompatActivity {
                     glasses.setVisibility(View.GONE);
                     fox.setVisibility(View.GONE);
                     cat.setVisibility(View.GONE);
+                    noFilter.setVisibility(View.GONE);
                     changeModel = !changeModel;
                     faceRegionsRenderable = filtersList.get(1);
                 }
@@ -164,6 +168,7 @@ public class FaceArActivity extends AppCompatActivity {
                     glasses.setVisibility(View.GONE);
                     fox.setVisibility(View.GONE);
                     cat.setVisibility(View.GONE);
+                    noFilter.setVisibility(View.GONE);
                     changeModel = !changeModel;
                     faceRegionsRenderable = filtersList.get(2);
                 }
@@ -177,8 +182,23 @@ public class FaceArActivity extends AppCompatActivity {
                     glasses.setVisibility(View.GONE);
                     fox.setVisibility(View.GONE);
                     cat.setVisibility(View.GONE);
+                    noFilter.setVisibility(View.GONE);
                     changeModel = !changeModel;
                     faceRegionsRenderable = filtersList.get(0);
+                }
+        );
+
+        //Apply no filter
+        noFilter.setOnClickListener((View v) -> {
+                    close.setVisibility(View.GONE);
+                    options.setVisibility(View.VISIBLE);
+                    options.setImageResource(R.drawable.selector_toggle_button);
+                    glasses.setVisibility(View.GONE);
+                    fox.setVisibility(View.GONE);
+                    cat.setVisibility(View.GONE);
+                    noFilter.setVisibility(View.GONE);
+                    changeModel = !changeModel;
+                    faceRegionsRenderable = filtersList.get(0);  //TODO: Update this line to point to array index 3 which is where the the dummy filter file reference will be stored to clear the filter off the face.
                 }
         );
 

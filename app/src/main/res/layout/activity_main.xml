@@ -54,13 +54,13 @@
             android:id="@+id/camera_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="25dp"
-            android:adjustViewBounds="true"
-            android:maxWidth="150dp"
-            android:scaleType="fitCenter"
             android:layout_toEndOf="@id/gallery_btn"
+            android:adjustViewBounds="true"
             android:background="@null"
             android:clickable="true"
+            android:maxWidth="150dp"
+            android:paddingStart="25dp"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/camera_pic"
             tools:ignore="RtlSymmetry" />
 
@@ -103,9 +103,26 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/no_filter_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="10dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:clickable="true"
+            android:maxWidth="90dp"
+            android:paddingEnd="25dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/selector_toggle_button"
+            android:visibility="gone"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageButton
             android:id="@+id/glasses_filter_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/no_filter_btn"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="10dp"
             android:adjustViewBounds="true"
