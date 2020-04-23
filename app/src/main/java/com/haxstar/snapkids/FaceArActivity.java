@@ -198,7 +198,7 @@ public class FaceArActivity extends AppCompatActivity {
                     cat.setVisibility(View.GONE);
                     noFilter.setVisibility(View.GONE);
                     changeModel = !changeModel;
-                    faceRegionsRenderable = filtersList.get(0);  //TODO: Update this line to point to array index 3 which is where the the dummy filter file reference will be stored to clear the filter off the face.
+                    faceRegionsRenderable = null; //To clear the filter
                 }
         );
 
@@ -214,10 +214,6 @@ public class FaceArActivity extends AppCompatActivity {
 
         scene.addOnUpdateListener(
                 (FrameTime frameTime) -> {
-                    if (faceRegionsRenderable == null) {
-                        return;
-                    }
-
                     Collection<AugmentedFace> faceList =
                             Objects.requireNonNull(sceneView.getSession()).getAllTrackables(AugmentedFace.class);
 
@@ -225,14 +221,20 @@ public class FaceArActivity extends AppCompatActivity {
                     for (AugmentedFace face : faceList) {
                         if (!faceNodeMap.containsKey(face)) {
                             AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
-                            faceNode.setParent(scene);
-                            faceNode.setFaceRegionsRenderable(faceRegionsRenderable);
-                            //If the fox filter is being loaded, load the texture as well
-                            setFoxTexture(faceNode);
-                            faceNodeMap.put(face, faceNode);
+                            if (faceRegionsRenderable == null) {
+                                faceNode.setParent(null);
+                            }else{
+                                faceNode.setParent(scene);
+                                faceNode.setFaceRegionsRenderable(faceRegionsRenderable);
+                                //If the fox filter is being loaded, load the texture as well
+                                setFoxTexture(faceNode);
+                                faceNodeMap.put(face, faceNode);
+                            }
                         } else if (changeModel) {
                             Objects.requireNonNull(faceNodeMap.get(face)).setFaceRegionsRenderable(faceRegionsRenderable);
-                            setFoxTexture(faceNodeMap.get(face));
+                            if(faceRegionsRenderable != null){
+                                setFoxTexture(faceNodeMap.get(face));
+                            }
                         }
                     }
                     changeModel = false;
@@ -269,7 +271,7 @@ public class FaceArActivity extends AppCompatActivity {
                             modelRenderable -> {
                                 //Add filter to list of filters
                                 filtersList.add(modelRenderable);
-                                faceRegionsRenderable = modelRenderable;
+                                faceRegionsRenderable = null;
                                 modelRenderable.setShadowCaster(false);
                                 modelRenderable.setShadowReceiver(false);
 
