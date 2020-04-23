@@ -95,6 +95,7 @@ public class FaceArActivity extends AppCompatActivity {
         ImageButton glasses = findViewById(R.id.glasses_filter_btn);
         ImageButton fox = findViewById(R.id.fox_filter_btn);
         ImageButton cat = findViewById(R.id.cat_filter_btn);
+        ImageButton close = findViewById(R.id.face_filter_close);
 
         galleryButton.setOnClickListener(v -> {
             if (!galleryButton.isActivated()) {
@@ -122,22 +123,31 @@ public class FaceArActivity extends AppCompatActivity {
             }
         });
 
-        //Set the next button
+        //Show options of filters to choose from
         options.setOnClickListener((View v) -> {
-                    if (glasses.getVisibility() == View.VISIBLE) {
-                        glasses.setVisibility(View.GONE);
-                        fox.setVisibility(View.GONE);
-                        cat.setVisibility(View.GONE);
-                    } else {
-                        glasses.setVisibility(View.VISIBLE);
-                        fox.setVisibility(View.VISIBLE);
-                        cat.setVisibility(View.VISIBLE);
-                    }
+                    options.setVisibility(View.GONE);
+                    close.setVisibility(View.VISIBLE);
+                    glasses.setVisibility(View.VISIBLE);
+                    fox.setVisibility(View.VISIBLE);
+                    cat.setVisibility(View.VISIBLE);
+                }
+        );
+
+        //Close filter options
+        close.setOnClickListener((View v) -> {
+                    close.setVisibility(View.GONE);
+                    options.setVisibility(View.VISIBLE);
+                    glasses.setVisibility(View.GONE);
+                    fox.setVisibility(View.GONE);
+                    cat.setVisibility(View.GONE);
                 }
         );
 
         //Apply glasses filter
         glasses.setOnClickListener((View v) -> {
+                    close.setVisibility(View.GONE);
+                    options.setVisibility(View.VISIBLE);
+                    options.setImageResource(R.drawable.glasses_emoji);
                     glasses.setVisibility(View.GONE);
                     fox.setVisibility(View.GONE);
                     cat.setVisibility(View.GONE);
@@ -148,6 +158,9 @@ public class FaceArActivity extends AppCompatActivity {
 
         //Apply fox filter
         fox.setOnClickListener((View v) -> {
+                    close.setVisibility(View.GONE);
+                    options.setVisibility(View.VISIBLE);
+                    options.setImageResource(R.drawable.fox_emoji);
                     glasses.setVisibility(View.GONE);
                     fox.setVisibility(View.GONE);
                     cat.setVisibility(View.GONE);
@@ -158,6 +171,9 @@ public class FaceArActivity extends AppCompatActivity {
 
         //Apply cat filter
         cat.setOnClickListener((View v) -> {
+                    close.setVisibility(View.GONE);
+                    options.setVisibility(View.VISIBLE);
+                    options.setImageResource(R.drawable.cat_emoji);
                     glasses.setVisibility(View.GONE);
                     fox.setVisibility(View.GONE);
                     cat.setVisibility(View.GONE);
