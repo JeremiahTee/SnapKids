@@ -64,6 +64,19 @@
             app:srcCompat="@drawable/camera_pic"
             tools:ignore="RtlSymmetry" />
 
+            <ImageButton
+                android:id="@+id/camera_flash_pic"
+                android:layout_width="52dp"
+                android:layout_height="69dp"
+                android:layout_marginLeft="195dp"
+                android:adjustViewBounds="true"
+                android:background="@null"
+                android:clickable="true"
+                android:maxWidth="150dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/boom_flash"
+                tools:ignore="RtlSymmetry" />
+
         <ImageButton
             android:id="@+id/face_filter_btn"
             android:layout_width="wrap_content"

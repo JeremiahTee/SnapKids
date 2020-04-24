@@ -32,6 +32,7 @@ import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.ar.core.ArCoreApk;
@@ -106,6 +107,9 @@ public class FaceArActivity extends AppCompatActivity {
         ImageButton close = findViewById(R.id.face_filter_close);
         ImageButton noFilter = findViewById(R.id.no_filter_btn);
 
+        ImageView cameraFlash = findViewById(R.id.camera_flash_pic);
+        cameraFlash.setVisibility(View.GONE);
+
         galleryButton.setOnClickListener(v -> {
             if (!galleryButton.isActivated()) {
                 Intent intent = new Intent();
@@ -127,8 +131,12 @@ public class FaceArActivity extends AppCompatActivity {
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.camera_snap);
         cameraButton.setOnClickListener(v -> {
             if (!cameraButton.isActivated()) {
+                cameraFlash.setVisibility(View.VISIBLE);
                 mp.start();
                 takePhoto();
+                new Handler().postDelayed(() -> {
+                    cameraFlash.setVisibility(View.GONE);
+                }, 750);
             }
         });
 
