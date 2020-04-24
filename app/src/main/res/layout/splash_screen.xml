@@ -16,12 +16,21 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="321dp"
-        android:layout_height="347dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="120dp"
-        app:srcCompat="@drawable/emoji_face_1" />
+        android:layout_marginBottom="175dp"
+        android:layout_marginLeft="90dp"
+        app:srcCompat="@drawable/side_emoji_fox" />
+
+    <ImageView
+        android:id="@+id/emoji_hand"
+        android:layout_width="84dp"
+        android:layout_height="102dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="280dp"
+        app:srcCompat="@drawable/emoji_hand" />
 
     <TextView
         android:id="@+id/textView"

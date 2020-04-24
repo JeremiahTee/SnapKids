@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +17,8 @@ import androidx.core.content.ContextCompat;
 public class SplashScreen extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_MULTIPLE_REQUEST = 1;
+    ImageView appTitle;
+    Animation rotateAnimation;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -22,6 +27,8 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
+        appTitle = (ImageView) findViewById(R.id.logo_name);
+        rotateAnimation();
 
         //if the permissions have not been accepted - request them
         if ((ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -55,7 +62,14 @@ public class SplashScreen extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(SplashScreen.this, FaceArActivity.class);
             startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             finish();
         }, 2000);
+    }
+
+    private void rotateAnimation() {
+
+        rotateAnimation = AnimationUtils.loadAnimation(this,R.anim.rotate);
+        appTitle.startAnimation(rotateAnimation);
     }
 }

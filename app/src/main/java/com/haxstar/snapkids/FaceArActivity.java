@@ -30,6 +30,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.view.PixelCopy;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -44,6 +45,10 @@ import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.utilities.ChangeId;
 import com.google.ar.sceneform.ux.AugmentedFaceNode;
+import com.transitionseverywhere.Fade;
+import com.transitionseverywhere.TransitionManager;
+import com.transitionseverywhere.TransitionSet;
+import com.transitionseverywhere.extra.Scale;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -60,6 +65,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 public class FaceArActivity extends AppCompatActivity {
     private static final String TAG = FaceArActivity.class.getSimpleName();
@@ -72,6 +79,7 @@ public class FaceArActivity extends AppCompatActivity {
     private ChangeId foxId;
 
     private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
+    private boolean visible;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -105,6 +113,7 @@ public class FaceArActivity extends AppCompatActivity {
                 intent.setType("image/*");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
@@ -118,14 +127,27 @@ public class FaceArActivity extends AppCompatActivity {
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.camera_snap);
         cameraButton.setOnClickListener(v -> {
             if (!cameraButton.isActivated()) {
-                Toast.makeText(FaceArActivity.this, "Take Photo", Toast.LENGTH_SHORT).show();
                 mp.start();
                 takePhoto();
             }
         });
 
+        final ViewGroup transitionsContainer = (ViewGroup) findViewById(R.id.filter_options);
+
         //Show options of filters to choose from
         options.setOnClickListener((View v) -> {
+
+            visible = !visible;
+
+            TransitionSet set = new TransitionSet()
+                    .addTransition(new Scale(0.7f))
+                    .addTransition(new Fade())
+                    .setInterpolator(visible ? new LinearOutSlowInInterpolator() :
+                            new FastOutLinearInInterpolator());
+
+            TransitionManager.beginDelayedTransition(transitionsContainer, set);
+
+
                     options.setVisibility(View.GONE);
                     close.setVisibility(View.VISIBLE);
                     glasses.setVisibility(View.VISIBLE);
