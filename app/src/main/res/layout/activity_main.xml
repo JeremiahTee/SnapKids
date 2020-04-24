@@ -68,13 +68,14 @@
                 android:id="@+id/camera_flash_pic"
                 android:layout_width="52dp"
                 android:layout_height="69dp"
-                android:layout_marginLeft="195dp"
+                android:layout_marginStart="195dp"
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:clickable="true"
                 android:maxWidth="150dp"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/boom_flash"
+                android:visibility="gone"
                 tools:ignore="RtlSymmetry" />
 
         <ImageButton

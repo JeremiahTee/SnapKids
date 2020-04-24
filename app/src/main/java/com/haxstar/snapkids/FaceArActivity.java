@@ -111,7 +111,6 @@ public class FaceArActivity extends AppCompatActivity {
         ImageButton noFilter = findViewById(R.id.no_filter_btn);
 
         ImageView cameraFlash = findViewById(R.id.camera_flash_pic);
-        cameraFlash.setVisibility(View.GONE);
         FrameLayout theFlash = findViewById(R.id.theFlash);
 
         galleryButton.setOnClickListener(v -> {
@@ -150,6 +149,7 @@ public class FaceArActivity extends AppCompatActivity {
                     @Override
                     public void onAnimationEnd(Animation anim) {
                         theFlash.setVisibility(View.GONE);
+                        cameraFlash.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -157,11 +157,7 @@ public class FaceArActivity extends AppCompatActivity {
                     }
                 });
                 theFlash.startAnimation(fade);
-
-
-                new Handler().postDelayed(() -> {
-                    cameraFlash.setVisibility(View.GONE);
-                }, 750);
+                cameraFlash.startAnimation(fade);
             }
         });
 
