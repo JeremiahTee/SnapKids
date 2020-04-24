@@ -234,6 +234,8 @@ public class FaceArActivity extends AppCompatActivity {
                             Objects.requireNonNull(faceNodeMap.get(face)).setFaceRegionsRenderable(faceRegionsRenderable);
                             if(faceRegionsRenderable != null){
                                 setFoxTexture(faceNodeMap.get(face));
+                            }else{
+                                faceNodeMap.get(face).setFaceMeshTexture(null);
                             }
                         }
                     }
