@@ -181,4 +181,13 @@
             android:visibility="gone"
             tools:ignore="RtlSymmetry" />
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/theFlash"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFFFFF"
+        android:visibility="gone"
+        />
+
 </merge>

@@ -31,6 +31,9 @@ import android.util.Log;
 import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -109,6 +112,7 @@ public class FaceArActivity extends AppCompatActivity {
 
         ImageView cameraFlash = findViewById(R.id.camera_flash_pic);
         cameraFlash.setVisibility(View.GONE);
+        FrameLayout theFlash = findViewById(R.id.theFlash);
 
         galleryButton.setOnClickListener(v -> {
             if (!galleryButton.isActivated()) {
@@ -134,6 +138,27 @@ public class FaceArActivity extends AppCompatActivity {
                 cameraFlash.setVisibility(View.VISIBLE);
                 mp.start();
                 takePhoto();
+
+                theFlash.setVisibility(View.VISIBLE);
+                AlphaAnimation fade = new AlphaAnimation(1, 0);
+                fade.setDuration(500);
+                fade.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation anim) {
+                        theFlash.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+                theFlash.startAnimation(fade);
+
+
                 new Handler().postDelayed(() -> {
                     cameraFlash.setVisibility(View.GONE);
                 }, 750);
@@ -145,15 +170,15 @@ public class FaceArActivity extends AppCompatActivity {
         //Show options of filters to choose from
         options.setOnClickListener((View v) -> {
 
-            visible = !visible;
+                    visible = !visible;
 
-            TransitionSet set = new TransitionSet()
-                    .addTransition(new Scale(0.7f))
-                    .addTransition(new Fade())
-                    .setInterpolator(visible ? new LinearOutSlowInInterpolator() :
-                            new FastOutLinearInInterpolator());
+                    TransitionSet set = new TransitionSet()
+                            .addTransition(new Scale(0.7f))
+                            .addTransition(new Fade())
+                            .setInterpolator(visible ? new LinearOutSlowInInterpolator() :
+                                    new FastOutLinearInInterpolator());
 
-            TransitionManager.beginDelayedTransition(transitionsContainer, set);
+                    TransitionManager.beginDelayedTransition(transitionsContainer, set);
 
 
                     options.setVisibility(View.GONE);
@@ -253,7 +278,7 @@ public class FaceArActivity extends AppCompatActivity {
                             AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
                             if (faceRegionsRenderable == null) {
                                 faceNode.setParent(null);
-                            }else{
+                            } else {
                                 faceNode.setParent(scene);
                                 faceNode.setFaceRegionsRenderable(faceRegionsRenderable);
                                 //If the fox filter is being loaded, load the texture as well
@@ -262,9 +287,9 @@ public class FaceArActivity extends AppCompatActivity {
                             }
                         } else if (changeModel) {
                             Objects.requireNonNull(faceNodeMap.get(face)).setFaceRegionsRenderable(faceRegionsRenderable);
-                            if(faceRegionsRenderable != null){
+                            if (faceRegionsRenderable != null) {
                                 setFoxTexture(faceNodeMap.get(face));
-                            }else{
+                            } else {
                                 faceNodeMap.get(face).setFaceMeshTexture(null);
                             }
                         }
