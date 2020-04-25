@@ -30,7 +30,12 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.view.PixelCopy;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.ar.core.ArCoreApk;
@@ -44,6 +49,10 @@ import com.google.ar.sceneform.rendering.Renderable;
 import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.utilities.ChangeId;
 import com.google.ar.sceneform.ux.AugmentedFaceNode;
+import com.transitionseverywhere.Fade;
+import com.transitionseverywhere.TransitionManager;
+import com.transitionseverywhere.TransitionSet;
+import com.transitionseverywhere.extra.Scale;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -60,6 +69,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 
 public class FaceArActivity extends AppCompatActivity {
     private static final String TAG = FaceArActivity.class.getSimpleName();
@@ -72,6 +83,7 @@ public class FaceArActivity extends AppCompatActivity {
     private ChangeId foxId;
 
     private final HashMap<AugmentedFace, AugmentedFaceNode> faceNodeMap = new HashMap<>();
+    private boolean visible;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -92,11 +104,15 @@ public class FaceArActivity extends AppCompatActivity {
         ImageButton cameraButton = findViewById(R.id.camera_btn);
         ImageButton options = findViewById(R.id.face_filter_btn);
 
+        ViewGroup transitionsContainer = findViewById(R.id.filter_options);
         ImageButton glasses = findViewById(R.id.glasses_filter_btn);
         ImageButton fox = findViewById(R.id.fox_filter_btn);
         ImageButton cat = findViewById(R.id.cat_filter_btn);
         ImageButton close = findViewById(R.id.face_filter_close);
         ImageButton noFilter = findViewById(R.id.no_filter_btn);
+
+        ImageView cameraFlash = findViewById(R.id.camera_flash_pic);
+        FrameLayout theFlash = findViewById(R.id.theFlash);
 
         galleryButton.setOnClickListener(v -> {
             if (!galleryButton.isActivated()) {
@@ -105,12 +121,13 @@ public class FaceArActivity extends AppCompatActivity {
                 intent.setType("image/*");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             }
         });
 
         arButton.setOnClickListener(v -> {
             Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-            sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.1?file=https://poly.googleusercontent.com/downloads/c/fp/1587461923777301/2LCcq8vhqJ3/6S-eh-b-ESF/turtle.gltf"));
+            sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.1?file=https://poly.googleusercontent.com/downloads/c/fp/1587806978781016/10u8FYPC5Br/5pprHANBNG5/Fox.gltf"));
             sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
             startActivity(sceneViewerIntent);
         });
@@ -118,89 +135,113 @@ public class FaceArActivity extends AppCompatActivity {
         final MediaPlayer mp = MediaPlayer.create(this, R.raw.camera_snap);
         cameraButton.setOnClickListener(v -> {
             if (!cameraButton.isActivated()) {
-                Toast.makeText(FaceArActivity.this, "Take Photo", Toast.LENGTH_SHORT).show();
+                cameraFlash.setVisibility(View.VISIBLE);
                 mp.start();
                 takePhoto();
+
+                theFlash.setVisibility(View.VISIBLE);
+                AlphaAnimation fade = new AlphaAnimation(1, 0);
+                fade.setDuration(500);
+                fade.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation anim) {
+                        theFlash.setVisibility(View.GONE);
+                        cameraFlash.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+                theFlash.startAnimation(fade);
+                cameraFlash.startAnimation(fade);
             }
         });
 
         //Show options of filters to choose from
         options.setOnClickListener((View v) -> {
-                    options.setVisibility(View.GONE);
-                    close.setVisibility(View.VISIBLE);
-                    glasses.setVisibility(View.VISIBLE);
-                    fox.setVisibility(View.VISIBLE);
-                    cat.setVisibility(View.VISIBLE);
-                    noFilter.setVisibility(View.VISIBLE);
-                }
-        );
+            //slight animation to reveal the face filter buttons
+            visible = !visible;
+             TransitionSet set = new TransitionSet()
+                     .addTransition(new Scale(0.45f))
+                     .addTransition(new Fade())
+                     .setInterpolator(visible ? new LinearOutSlowInInterpolator() : new FastOutLinearInInterpolator());
+
+             TransitionManager.beginDelayedTransition(transitionsContainer, set);
+
+              options.setVisibility(View.GONE);
+              close.setVisibility(View.VISIBLE);
+              glasses.setVisibility(View.VISIBLE);
+              fox.setVisibility(View.VISIBLE);
+              cat.setVisibility(View.VISIBLE);
+              noFilter.setVisibility(View.VISIBLE);
+        });
 
         //Close filter options
         close.setOnClickListener((View v) -> {
-                    close.setVisibility(View.GONE);
-                    options.setVisibility(View.VISIBLE);
-                    glasses.setVisibility(View.GONE);
-                    fox.setVisibility(View.GONE);
-                    cat.setVisibility(View.GONE);
-                    noFilter.setVisibility(View.GONE);
-                }
-        );
+            close.setVisibility(View.GONE);
+            options.setVisibility(View.VISIBLE);
+            glasses.setVisibility(View.GONE);
+            fox.setVisibility(View.GONE);
+            cat.setVisibility(View.GONE);
+            noFilter.setVisibility(View.GONE);
+        });
 
         //Apply glasses filter
         glasses.setOnClickListener((View v) -> {
-                    close.setVisibility(View.GONE);
-                    options.setVisibility(View.VISIBLE);
-                    options.setImageResource(R.drawable.glasses_emoji);
-                    glasses.setVisibility(View.GONE);
-                    fox.setVisibility(View.GONE);
-                    cat.setVisibility(View.GONE);
-                    noFilter.setVisibility(View.GONE);
-                    changeModel = !changeModel;
-                    faceRegionsRenderable = filtersList.get(1);
-                }
-        );
+            close.setVisibility(View.GONE);
+            options.setVisibility(View.VISIBLE);
+            options.setImageResource(R.drawable.glasses_emoji);
+            glasses.setVisibility(View.GONE);
+            fox.setVisibility(View.GONE);
+            cat.setVisibility(View.GONE);
+            noFilter.setVisibility(View.GONE);
+            changeModel = !changeModel;
+            faceRegionsRenderable = filtersList.get(1);
+        });
 
         //Apply fox filter
         fox.setOnClickListener((View v) -> {
-                    close.setVisibility(View.GONE);
-                    options.setVisibility(View.VISIBLE);
-                    options.setImageResource(R.drawable.fox_emoji);
-                    glasses.setVisibility(View.GONE);
-                    fox.setVisibility(View.GONE);
-                    cat.setVisibility(View.GONE);
-                    noFilter.setVisibility(View.GONE);
-                    changeModel = !changeModel;
-                    faceRegionsRenderable = filtersList.get(2);
-                }
-        );
+            close.setVisibility(View.GONE);
+            options.setVisibility(View.VISIBLE);
+            options.setImageResource(R.drawable.fox_emoji);
+            glasses.setVisibility(View.GONE);
+            fox.setVisibility(View.GONE);
+            cat.setVisibility(View.GONE);
+            noFilter.setVisibility(View.GONE);
+            changeModel = !changeModel;
+            faceRegionsRenderable = filtersList.get(2);
+        });
 
         //Apply cat filter
         cat.setOnClickListener((View v) -> {
-                    close.setVisibility(View.GONE);
-                    options.setVisibility(View.VISIBLE);
-                    options.setImageResource(R.drawable.cat_emoji);
-                    glasses.setVisibility(View.GONE);
-                    fox.setVisibility(View.GONE);
-                    cat.setVisibility(View.GONE);
-                    noFilter.setVisibility(View.GONE);
-                    changeModel = !changeModel;
-                    faceRegionsRenderable = filtersList.get(0);
-                }
-        );
+            close.setVisibility(View.GONE);
+            options.setVisibility(View.VISIBLE);
+            options.setImageResource(R.drawable.cat_emoji);
+            glasses.setVisibility(View.GONE);
+            fox.setVisibility(View.GONE);
+            cat.setVisibility(View.GONE);
+            noFilter.setVisibility(View.GONE);
+            changeModel = !changeModel;
+            faceRegionsRenderable = filtersList.get(0);
+        });
 
         //Apply no filter
         noFilter.setOnClickListener((View v) -> {
-                    close.setVisibility(View.GONE);
-                    options.setVisibility(View.VISIBLE);
-                    options.setImageResource(R.drawable.selector_toggle_button);
-                    glasses.setVisibility(View.GONE);
-                    fox.setVisibility(View.GONE);
-                    cat.setVisibility(View.GONE);
-                    noFilter.setVisibility(View.GONE);
-                    changeModel = !changeModel;
-                    faceRegionsRenderable = null; //To clear the filter
-                }
-        );
+            close.setVisibility(View.GONE);
+            options.setVisibility(View.VISIBLE);
+            options.setImageResource(R.drawable.selector_toggle_button);
+            glasses.setVisibility(View.GONE);
+            fox.setVisibility(View.GONE);
+            cat.setVisibility(View.GONE);
+            noFilter.setVisibility(View.GONE);
+            changeModel = !changeModel;
+            faceRegionsRenderable = null; //To clear the filter
+        });
 
         loadModels();
 
@@ -223,7 +264,7 @@ public class FaceArActivity extends AppCompatActivity {
                             AugmentedFaceNode faceNode = new AugmentedFaceNode(face);
                             if (faceRegionsRenderable == null) {
                                 faceNode.setParent(null);
-                            }else{
+                            } else {
                                 faceNode.setParent(scene);
                                 faceNode.setFaceRegionsRenderable(faceRegionsRenderable);
                                 //If the fox filter is being loaded, load the texture as well
@@ -232,10 +273,10 @@ public class FaceArActivity extends AppCompatActivity {
                             }
                         } else if (changeModel) {
                             Objects.requireNonNull(faceNodeMap.get(face)).setFaceRegionsRenderable(faceRegionsRenderable);
-                            if(faceRegionsRenderable != null){
+                            if (faceRegionsRenderable != null) {
                                 setFoxTexture(faceNodeMap.get(face));
-                            }else{
-                                faceNodeMap.get(face).setFaceMeshTexture(null);
+                            } else {
+                                Objects.requireNonNull(faceNodeMap.get(face)).setFaceMeshTexture(null);
                             }
                         }
                     }
@@ -253,7 +294,8 @@ public class FaceArActivity extends AppCompatActivity {
                             iter.remove();
                         }
                     }
-                });
+                }
+         );
     }
 
     /**
@@ -332,6 +374,11 @@ public class FaceArActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Produces a unique filename to be stored in the Camera directory
+     *
+     * @return String of the filename
+     */
     private String generateFilename() {
         String date =
                 new SimpleDateFormat("yyyyMMddHHmmss", java.util.Locale.getDefault()).format(new Date());
@@ -339,6 +386,12 @@ public class FaceArActivity extends AppCompatActivity {
                 File.separator + "Camera/" + date + "_screenshot.jpg";
     }
 
+    /**
+     * Creates a file and stores the processed image through Bitmap
+     *
+     * @param bitmap is the Bitmap of the successfully copied image
+     * @param filename is the name of the file that will be stored on the device
+     */
     private void saveBitmapToDisk(Bitmap bitmap, String filename) throws IOException {
 
         File out = new File(filename);
@@ -360,7 +413,9 @@ public class FaceArActivity extends AppCompatActivity {
             throw new IOException("Failed to save bitmap to disk", ex);
         }
     }
-
+    /**
+     * Captures the photo with the face filters enabled and disabled
+     */
     private void takePhoto() {
         final String filename = generateFilename();
         ArSceneView view = arFragment.getArSceneView();

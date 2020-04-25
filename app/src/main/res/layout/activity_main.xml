@@ -26,7 +26,7 @@
             android:maxWidth="120dp"
             android:padding="25dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/turtle_ar" />
+            app:srcCompat="@drawable/fox_ar" />
 
     </RelativeLayout>
 
@@ -62,6 +62,20 @@
             android:paddingStart="25dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/camera_pic"
+            tools:ignore="RtlSymmetry" />
+
+        <ImageButton
+            android:id="@+id/camera_flash_pic"
+            android:layout_width="52dp"
+            android:layout_height="69dp"
+            android:layout_marginStart="195dp"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:clickable="true"
+            android:maxWidth="150dp"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            app:srcCompat="@drawable/boom_flash"
             tools:ignore="RtlSymmetry" />
 
         <ImageButton
@@ -168,4 +182,12 @@
             android:visibility="gone"
             tools:ignore="RtlSymmetry" />
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/theFlash"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFFFFF"
+        android:visibility="gone" />
+
 </merge>
