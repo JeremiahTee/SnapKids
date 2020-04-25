@@ -2,10 +2,10 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <rotate xmlns:android="http://schemas.android.com/apk/res/android"
         android:duration="500"
-        android:fromDegrees="-7"
+        android:fromDegrees="-13"
         android:pivotX="50%"
         android:pivotY="50%"
         android:repeatCount="infinite"
         android:repeatMode="reverse"
-        android:toDegrees="7" />
+        android:toDegrees="9" />
 </set>
