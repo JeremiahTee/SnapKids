@@ -104,7 +104,7 @@ public class FaceArActivity extends AppCompatActivity {
         ImageButton cameraButton = findViewById(R.id.camera_btn);
         ImageButton options = findViewById(R.id.face_filter_btn);
 
-        ViewGroup transitionsContainer = (ViewGroup) findViewById(R.id.filter_options);
+        ViewGroup transitionsContainer = findViewById(R.id.filter_options);
         ImageButton glasses = findViewById(R.id.glasses_filter_btn);
         ImageButton fox = findViewById(R.id.fox_filter_btn);
         ImageButton cat = findViewById(R.id.cat_filter_btn);
@@ -276,7 +276,7 @@ public class FaceArActivity extends AppCompatActivity {
                             if (faceRegionsRenderable != null) {
                                 setFoxTexture(faceNodeMap.get(face));
                             } else {
-                                faceNodeMap.get(face).setFaceMeshTexture(null);
+                                Objects.requireNonNull(faceNodeMap.get(face)).setFaceMeshTexture(null);
                             }
                         }
                     }

@@ -9,8 +9,8 @@
         android:id="@+id/logo_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="100dp"
         android:rotation="5"
         app:srcCompat="@drawable/logo_pic" />
 
@@ -19,8 +19,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="175dp"
         android:layout_marginStart="90dp"
+        android:layout_marginBottom="175dp"
         app:srcCompat="@drawable/side_emoji_fox" />
 
     <ImageView
@@ -38,19 +38,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:textColor="#949494"
-        android:textSize="22sp"
         android:layout_marginBottom="100dp"
-        android:text="@string/loading" />
+        android:text="@string/loading"
+        android:textColor="#949494"
+        android:textSize="22sp" />
 
     <ProgressBar
         android:id="@+id/pBar"
         style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    </ProgressBar>
+        android:layout_marginBottom="20dp" />
 
 </RelativeLayout>

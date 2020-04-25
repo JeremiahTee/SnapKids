@@ -17,8 +17,7 @@ import androidx.core.content.ContextCompat;
 public class SplashScreen extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_MULTIPLE_REQUEST = 1;
-    ImageView appTitle;
-    Animation rotateAnimation;
+    private ImageView appTitle;
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -27,7 +26,7 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
-        appTitle = (ImageView) findViewById(R.id.logo_name);
+        appTitle = findViewById(R.id.logo_name);
         rotateAnimation();
 
         //if the permissions have not been accepted - request them
@@ -69,7 +68,7 @@ public class SplashScreen extends AppCompatActivity {
 
     private void rotateAnimation() {
 
-        rotateAnimation = AnimationUtils.loadAnimation(this,R.anim.rotate);
+        Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate);
         appTitle.startAnimation(rotateAnimation);
     }
 }
