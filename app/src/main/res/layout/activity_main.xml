@@ -26,7 +26,7 @@
             android:maxWidth="120dp"
             android:padding="25dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/turtle_ar" />
+            app:srcCompat="@drawable/fox_ar" />
 
     </RelativeLayout>
 
