@@ -127,7 +127,7 @@ public class FaceArActivity extends AppCompatActivity {
 
         arButton.setOnClickListener(v -> {
             Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
-            sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.1?file=https://poly.googleusercontent.com/downloads/c/fp/1587461923777301/2LCcq8vhqJ3/6S-eh-b-ESF/turtle.gltf"));
+            sceneViewerIntent.setData(Uri.parse("https://arvr.google.com/scene-viewer/1.1?file=https://poly.googleusercontent.com/downloads/c/fp/1587806978781016/10u8FYPC5Br/5pprHANBNG5/Fox.gltf"));
             sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox");
             startActivity(sceneViewerIntent);
         });
